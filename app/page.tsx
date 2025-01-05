@@ -1,100 +1,112 @@
-import Image from "next/image";
+import CategorySection from "@/components/category-section";
+import FeaturedProducts from "@/components/featured-products";
+import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      
+      {/* Hero Section */}
+      <div className="relative md:pt-[116px]">
+        <div className="h-[60vh] bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="max-w-[1240px] px-4 mx-auto w-full h-full flex items-center">
+            <div className="text-white max-w-2xl">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                Discover Your Style
+              </h1>
+              <p className="text-lg md:text-xl mb-8 opacity-90">
+                Shop the latest trends in fashion, electronics, and more with our curated collection of premium products.
+              </p>
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                Shop Now <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-[1240px] px-4 mx-auto w-full py-12 space-y-16">
+        {/* Categories */}
+        <section>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">Shop by Category</h2>
+            <Button variant="ghost" className="group">
+              View All 
+              <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+          <CategorySection />
+        </section>
+
+        {/* Featured Products */}
+        <section>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold">Featured Products</h2>
+            <Button variant="ghost" className="group">
+              View All 
+              <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+          <FeaturedProducts />
+        </section>
+
+        {/* Newsletter */}
+        <section className="bg-gray-100 rounded-2xl p-8 md:p-12">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-2xl font-bold mb-4">Stay Updated</h2>
+            <p className="text-gray-600 mb-6">
+              Subscribe to our newsletter for updates on new products, special offers, and more.
+            </p>
+            <div className="flex gap-4 max-w-md mx-auto">
+              <Input placeholder="Enter your email" type="email" />
+              <Button>Subscribe</Button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-white border-t mt-16">
+        <div className="max-w-[1240px] px-4 mx-auto w-full py-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="font-bold mb-4">StyleStore</h3>
+              <p className="text-gray-600">Your one-stop shop for all things stylish.</p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <div className="space-y-2">
+                <p className="text-gray-600 hover:text-gray-900 cursor-pointer">About Us</p>
+                <p className="text-gray-600 hover:text-gray-900 cursor-pointer">Contact</p>
+                <p className="text-gray-600 hover:text-gray-900 cursor-pointer">FAQs</p>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Categories</h4>
+              <div className="space-y-2">
+                <p className="text-gray-600 hover:text-gray-900 cursor-pointer">Fashion</p>
+                <p className="text-gray-600 hover:text-gray-900 cursor-pointer">Electronics</p>
+                <p className="text-gray-600 hover:text-gray-900 cursor-pointer">Home & Living</p>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Contact Us</h4>
+              <div className="space-y-2 text-gray-600">
+                <p>Email: support@stylestore.com</p>
+                <p>Phone: (123) 456-7890</p>
+                <p>Address: 123 Fashion Street</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-t mt-8 pt-8 text-center text-gray-600">
+            <p>© 2024 StyleStore. All rights reserved.</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
