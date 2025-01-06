@@ -50,7 +50,7 @@ const Navbar = () => {
               </div>
             </SheetContent>
           </Sheet>
-          <h1 className="text-xl font-bold ml-4">StyleStore</h1>
+          <h1 className="text-xl font-bold ml-4">Gundam Store</h1>
         </div>
         
         <div className="flex items-center space-x-4">
