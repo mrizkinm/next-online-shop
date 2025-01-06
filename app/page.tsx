@@ -75,7 +75,7 @@ export default function Home() {
         <div className="max-w-[1240px] px-4 mx-auto w-full py-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold mb-4">StyleStore</h3>
+              <h3 className="font-bold mb-4">Gundam Store</h3>
               <p className="text-gray-600">Your one-stop shop for all things stylish.</p>
             </div>
             <div>
