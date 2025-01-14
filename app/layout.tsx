@@ -6,6 +6,7 @@ import { StoreProvider } from "../context/store-context";
 import { StoreInfo } from "./types";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { getStoreInfo } from "@/lib/api";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +20,12 @@ const geistMono = Geist_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   // Ambil data store secara dinamis
-  const storeInfo = await getStoreInfo();
+  const store = await getStoreInfo();
+  const storeInfo: StoreInfo = store[0];
 
   return {
     title: storeInfo.name,
-    description: storeInfo.address,
+    description: storeInfo.description,
   };
 }
 
@@ -32,7 +34,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const storeInfo: StoreInfo = await getStoreInfo();
+  const store = await getStoreInfo();
+  const storeInfo: StoreInfo = store[0];
 
   return (
     <StoreProvider storeInfo={storeInfo}>
@@ -50,25 +53,4 @@ export default async function RootLayout({
       </html>
      </StoreProvider>
   );
-}
-
-async function getStoreInfo(): Promise<StoreInfo> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    const res = await fetch(`${baseUrl}/api/data/shop`, { method: "GET" });
-    if (!res.ok) {
-      throw new Error('Failed to fetch store information');
-    }
-    const responseData = await res.json();
-    return responseData[0];
-  } catch (error) {
-    console.error(error);
-    return {
-      name: 'Error',
-      address: 'Error',
-      phone: '/img/default.jpg',
-      email: 'Error',
-      description: '/img/default.jpg'
-    };
-  }
 }
