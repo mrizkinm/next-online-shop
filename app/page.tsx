@@ -1,12 +1,21 @@
-'use client'
-
-import CategorySection from "@/components/category-section";
+import CategoryItem from "@/components/category-item";
 import FeaturedProducts from "@/components/featured-products";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getCategories, getProducts } from "@/lib/api";
 import { ArrowRight, ChevronRight } from "lucide-react";
+import { Suspense } from "react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default async function Home() {
+  const { data: products, total } = await getProducts({
+    isFeatured: true
+  });
+
+  const categories = await getCategories({limit: 3});
+
   return (
     <div>
       {/* Hero Section */}
@@ -37,19 +46,27 @@ export default async function Home() {
               <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
-          <CategorySection />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Suspense fallback={<CategorySkeleton />}>
+              <CategoryItem categories={categories} />
+            </Suspense>
+          </div>
         </section>
 
         {/* Featured Products */}
         <section>
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold">Featured Products</h2>
-            <Button variant="ghost" className="group">
+            <Link href="/products" className={cn(buttonVariants({ variant: "ghost" }), "group")}>
               View All 
               <ChevronRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            </Link>
           </div>
-          <FeaturedProducts />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <Suspense fallback={<FeaturedProductsSkeleton />}>
+              <FeaturedProducts products={products} />
+            </Suspense>
+          </div>
         </section>
 
         {/* Newsletter */}
@@ -68,4 +85,39 @@ export default async function Home() {
       </div>
     </div>
   );
+}
+
+const CategorySkeleton = () => {
+  return (
+    <>
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="group relative cursor-pointer">
+          <div className="aspect-[2/1] overflow-hidden rounded-lg">
+            <Skeleton className="w-full h-full bg-gray-200" />
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-lg">
+              <Skeleton className="w-32 h-6 bg-gray-300 rounded-md" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+
+const FeaturedProductsSkeleton = () => {
+  return (
+    <>
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div key={index} className="bg-gray-200 animate-pulse rounded-lg">
+          <div className="aspect-square" />
+          <div className="p-4 space-y-2">
+            <div className="h-4 w-1/3 bg-gray-300 rounded" />
+            <div className="h-6 w-2/3 bg-gray-300 rounded" />
+            <div className="h-4 w-1/4 bg-gray-300 rounded" />
+          </div>
+        </div>
+      ))}
+    </>
+  )
 }
