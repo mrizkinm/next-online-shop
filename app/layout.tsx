@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import { StoreProvider } from "../context/store-context";
+import { StoreProvider } from "@/context/store-context";
 import { StoreInfo } from "./types";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { getStoreInfo } from "@/lib/api";
+import { CartProvider } from "@/context/cart-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,18 +40,20 @@ export default async function RootLayout({
 
   return (
     <StoreProvider storeInfo={storeInfo}>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <NextTopLoader showSpinner={false} />
-          <div className="min-h-screen bg-gray-50 pt-[50px] md:pt-[116px]">
-            <Navbar />
-            {children}
-            <Footer />
-          </div>
-        </body>
-      </html>
+      <CartProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <NextTopLoader showSpinner={false} />
+            <div className="min-h-screen bg-gray-50 pt-[50px] md:pt-[116px]">
+              <Navbar />
+              {children}
+              <Footer />
+            </div>
+          </body>
+        </html>
+      </CartProvider>
      </StoreProvider>
   );
 }
