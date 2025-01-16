@@ -17,6 +17,7 @@ export interface Image {
 export interface Category {
   id: number;
   name: string;
+  products: Product[];
   createdAt: string;
   updatedAt: string;
 }
@@ -32,6 +33,55 @@ export interface Product {
   images: Image[];
   description: string;
   quantity: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Order {
+  id: number;
+  customerId?: number | null; // Nullable jika memungkinkan pemesanan tanpa akun
+  customer?: Customer | null; // Relasi opsional ke tabel Customer
+  guestInfo?: Record<string, any> | null; // JSON data
+  items: OrderItem[];
+  totalAmount: number;
+  status: string; // Status pesanan
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface OrderItem {
+  id: number;
+  orderId: number;
+  order?: Order; // Relasi opsional ke Order
+  productId: number;
+  product?: Product; // Relasi opsional ke Product
+  quantity: number; // Jumlah item yang dipesan
+  price: number; // Harga satuan saat dipesan
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Customer {
+  id: number;
+  name: string; // Nama pelanggan
+  email?: string | null; // Email pelanggan, opsional
+  phone?: string | null; // Nomor telepon pelanggan, opsional
+  address?: string | null; // Alamat pelanggan, opsional
+  orders: Order[]; // Relasi ke tabel Order
+  password: string; // Kata sandi pelanggan
+  token?: string | null; // Token opsional
+  carts: Cart[]; // Relasi ke tabel Cart
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Cart {
+  id: number;
+  customerId: number;
+  customer?: Customer; // Relasi opsional ke Customer
+  productId: number;
+  product: Product;
+  quantity: number; // Default 1
   createdAt: string;
   updatedAt: string;
 }
