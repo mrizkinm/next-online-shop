@@ -70,10 +70,10 @@ export default async function Home() {
         </section>
 
         {/* Newsletter */}
-        <section className="bg-gray-100 rounded-2xl p-8 md:p-12">
+        <section className="bg-gray-100 dark:bg-slate-900 rounded-2xl p-8 md:p-12">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl font-bold mb-4">Stay Updated</h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-400 mb-6">
               Subscribe to our newsletter for updates on new products, special offers, and more.
             </p>
             <div className="flex gap-4 max-w-md mx-auto">
