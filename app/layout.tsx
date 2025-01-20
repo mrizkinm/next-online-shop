@@ -9,6 +9,8 @@ import Footer from "@/components/footer";
 import { getCategories, getStoreInfo } from "@/lib/api";
 import { CartProvider } from "@/context/cart-context";
 import { ThemeProvider } from "@/providers/theme-provider";
+import { Toaster } from 'react-hot-toast';
+import { UserDataProvider } from "@/context/user-data-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,9 +43,10 @@ export default async function RootLayout({
   const categories = await getCategories({limit: 3});
 
   return (
-    <StoreProvider storeInfo={storeInfo}>
-      <CartProvider>
-        <html lang="en">
+    <UserDataProvider>
+      <StoreProvider storeInfo={storeInfo}>
+        <CartProvider>
+          <html lang="en">
           <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           >
@@ -51,6 +54,7 @@ export default async function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="system">
               <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[50px] md:pt-[116px]">
                 <Navbar />
+                <Toaster />
                 {children}
                 <Footer categories={categories} />
               </div>
@@ -59,5 +63,6 @@ export default async function RootLayout({
         </html>
       </CartProvider>
      </StoreProvider>
+    </UserDataProvider>
   );
 }
