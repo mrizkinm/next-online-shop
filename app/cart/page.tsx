@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator'
 import { useCart } from '@/context/cart-context';
+import { ShoppingCart } from 'lucide-react';
 import React from 'react'
 
 const CartPage = () => {
@@ -30,12 +31,20 @@ const CartPage = () => {
             </Badge>
           </div>
           <div className="pr-4">
-            {cart.map((item: any) => (
-              <React.Fragment key={item.id}>
-                <CartItem item={item} />
-                <Separator />
-              </React.Fragment>
-            ))}
+            {
+              cart.length > 0
+                ? 
+                cart.map((item: any) => (
+                <React.Fragment key={item.id}>
+                  <CartItem item={item} />
+                  <Separator />
+                </React.Fragment>
+              ))
+              : <div className="flex flex-col items-center justify-center h-52 gap-y-4">
+                  <ShoppingCart size={40} />
+                  <span className="text-sm text-slate-400">No data available</span>
+                </div>
+            }
           </div>
           <div className="mt-4 space-y-4">
             <div className="flex justify-between font-semibold">
