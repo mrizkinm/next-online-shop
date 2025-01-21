@@ -32,7 +32,7 @@ export async function GET(req: Request) {
       .sign(new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET));
 
     const response = NextResponse.json({ accessTokenShop });
-    response.cookies.set('accessTokenShopShop', accessTokenShop, {
+    response.cookies.set('accessTokenShop', accessTokenShop, {
       httpOnly: false,  // Untuk keamanan, hanya bisa diakses oleh server
       secure: process.env.NODE_ENV === 'production',  // Set secure di production
       maxAge: 15 * 60, // Set waktu kadaluarsa 15 menit
