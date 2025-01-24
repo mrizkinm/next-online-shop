@@ -2,10 +2,12 @@
 
 import CartItem from '@/components/cart-item';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator'
 import { useCart } from '@/context/cart-context';
+import { cn } from '@/lib/utils';
 import { ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 import React from 'react'
 
 const CartPage = () => {
@@ -52,9 +54,9 @@ const CartPage = () => {
               <span>Rp {totalPrice.toLocaleString()}</span>
             </div>
             <div className="space-y-2">
-              <Button className="w-full">
+              <Link href="/checkout" className={cn(buttonVariants({ variant: "default" }), "w-full")}>
                 Checkout
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
