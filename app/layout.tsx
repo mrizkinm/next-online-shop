@@ -11,6 +11,7 @@ import { CartProvider } from "@/context/cart-context";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from 'react-hot-toast';
 import { UserDataProvider } from "@/context/user-data-context";
+import MidtransScript from '@/components/midtrans-script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,22 +48,23 @@ export default async function RootLayout({
       <StoreProvider storeInfo={storeInfo}>
         <CartProvider>
           <html lang="en">
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            <NextTopLoader showSpinner={false} />
-            <ThemeProvider attribute="class" defaultTheme="system">
-              <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[50px] md:pt-[116px]">
-                <Navbar />
-                <Toaster />
-                {children}
-                <Footer categories={categories} />
-              </div>
-            </ThemeProvider>
-          </body>
-        </html>
-      </CartProvider>
-     </StoreProvider>
+            <body
+              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            >
+              <NextTopLoader showSpinner={false} />
+              <ThemeProvider attribute="class" defaultTheme="system">
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[50px] md:pt-[116px]">
+                  <Navbar />
+                  <Toaster />
+                  <MidtransScript />
+                  {children}
+                  <Footer categories={categories} />
+                </div>
+              </ThemeProvider>
+            </body>
+          </html>
+        </CartProvider>
+      </StoreProvider>
     </UserDataProvider>
   );
 }
