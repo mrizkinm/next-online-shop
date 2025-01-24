@@ -39,12 +39,13 @@ export interface Product {
 
 export interface Order {
   id: number;
-  customerId?: number | null; // Nullable jika memungkinkan pemesanan tanpa akun
-  customer?: Customer | null; // Relasi opsional ke tabel Customer
-  guestInfo?: Record<string, any> | null; // JSON data
+  customerId: number; // Nullable jika memungkinkan pemesanan tanpa akun
+  customer: Customer; // Relasi opsional ke tabel Customer
+  info: Record<string, any>; // JSON data
   items: OrderItem[];
   totalAmount: number;
   status: string; // Status pesanan
+  orderTrxId: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -52,9 +53,9 @@ export interface Order {
 export interface OrderItem {
   id: number;
   orderId: number;
-  order?: Order; // Relasi opsional ke Order
+  order: Order;
   productId: number;
-  product?: Product; // Relasi opsional ke Product
+  product: Product;
   quantity: number; // Jumlah item yang dipesan
   price: number; // Harga satuan saat dipesan
   createdAt: string;
