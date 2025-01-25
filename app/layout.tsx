@@ -10,8 +10,8 @@ import { getCategories, getStoreInfo } from "@/lib/api";
 import { CartProvider } from "@/context/cart-context";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from 'react-hot-toast';
-import { UserDataProvider } from "@/context/user-data-context";
 import MidtransScript from '@/components/midtrans-script';
+import NextAuthProvider from "@/providers/next-auth-provider"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +44,7 @@ export default async function RootLayout({
   const categories = await getCategories({limit: 3});
 
   return (
-    <UserDataProvider>
+    <NextAuthProvider>
       <StoreProvider storeInfo={storeInfo}>
         <CartProvider>
           <html lang="en">
@@ -65,6 +65,6 @@ export default async function RootLayout({
           </html>
         </CartProvider>
       </StoreProvider>
-    </UserDataProvider>
+    </NextAuthProvider>
   );
 }
