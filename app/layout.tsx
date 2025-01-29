@@ -53,7 +53,7 @@ export default async function RootLayout({
             >
               <NextTopLoader showSpinner={false} />
               <ThemeProvider attribute="class" defaultTheme="system">
-                <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[50px] md:pt-[116px]">
+                <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[116px]">
                   <Navbar />
                   <Toaster />
                   <MidtransScript />
