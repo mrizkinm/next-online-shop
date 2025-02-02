@@ -23,14 +23,14 @@ export default async function Home() {
         <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto w-full h-full flex items-center">
           <div className="text-white max-w-2xl">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Discover Your Style
+              Assemble Your Legend.
             </h1>
             <p className="text-lg md:text-xl mb-8 opacity-90">
-              Shop the latest trends in fashion, electronics, and more with our curated collection of premium products.
+              Discover a wide range of Gundam model kits and bring your favorite mechas to life with precision and style.
             </p>
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+            <Link href="/products" className={cn(buttonVariants({ variant: "default" }), "bg-white text-blue-600 hover:bg-gray-100")}>
               Shop Now <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
