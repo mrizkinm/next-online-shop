@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Montserrat } from "next/font/google";
+
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "@/context/store-context";
@@ -13,20 +14,22 @@ import { Toaster } from 'react-hot-toast';
 import MidtransScript from '@/components/midtrans-script';
 import NextAuthProvider from "@/providers/next-auth-provider"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400", "600"], // Bisa pilih lebih dari satu
+  variable: "--font-poppins", // Variable CSS agar bisa digunakan di global CSS
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const montserrat = Montserrat({
   subsets: ["latin"],
+  weight: ["700"], // Bold untuk heading
+  variable: "--font-montserrat",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
   // Ambil data store secara dinamis
   const store = await getStoreInfo();
-  const storeInfo: StoreInfo = store[0];
+  const storeInfo: StoreInfo = store;
 
   return {
     title: storeInfo.name,
@@ -40,7 +43,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const store = await getStoreInfo();
-  const storeInfo: StoreInfo = store[0];
+  const storeInfo: StoreInfo = store;
   const categories = await getCategories({limit: 3});
 
   return (
@@ -49,7 +52,7 @@ export default async function RootLayout({
         <CartProvider>
           <html lang="en">
             <body
-              className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+              className={`${poppins.variable} ${montserrat.variable} antialiased`}
             >
               <NextTopLoader showSpinner={false} />
               <ThemeProvider attribute="class" defaultTheme="system">
