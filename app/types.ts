@@ -3,6 +3,7 @@ export interface StoreInfo {
   address: string; // Alamat toko
   phone: string; // Nomor telepon toko
   email: string;
+  image: string;
   description: string;
 }
 
@@ -18,6 +19,7 @@ export interface Category {
   id: number;
   name: string;
   products: Product[];
+  image: string;
   createdAt: string;
   updatedAt: string;
 }
