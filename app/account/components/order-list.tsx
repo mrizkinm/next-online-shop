@@ -30,7 +30,7 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
   const getStatusVariant = (status: string) => {
     switch(status) {
       case 'Pending': return 'secondary';
-      case 'Completed': return 'default';
+      case 'Processed': return 'default';
       case 'Canceled': return 'destructive';
       default: return 'outline';
     }
@@ -40,7 +40,7 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
     setLoading(true);
     try {
       const existingTransaction = await checkTransactionStatus(id)
-      if (existingTransaction.snapToken && existingTransaction.paymentStatus && existingTransaction.paymentStatus.transaction_status === 'pending') {
+      if (existingTransaction.snapToken) {
         toast.success('Transaction is pending. Redirecting to payment...');
         return snapPay(existingTransaction.snapToken);
       }
@@ -123,7 +123,7 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm text-muted-foreground">
-                    Date: {new Date(order.createdAt).toLocaleDateString()}
+                    Date: {new Date(order.createdAt).toLocaleDateString('id-ID')}
                   </p>
                   <p className="font-bold text-lg">
                     Total: {formatCurrency(order.totalAmount)}
@@ -156,9 +156,11 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
                       </div>
                     </DialogContent>
                   </Dialog>
-                  <Button variant="outline" size="sm" onClick={() => handlePayNow(order.id)} disabled={loading}>
-                    Pay Now
-                  </Button>
+                  {order.status === 'Pending' && (
+                    <Button variant="default" size="sm" onClick={() => handlePayNow(order.id)} disabled={loading}>
+                      Pay Now
+                    </Button>
+                  )}
                 </div>
               </div>
             </CardContent>
