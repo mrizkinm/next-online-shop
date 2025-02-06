@@ -3,7 +3,11 @@ import { NextResponse } from "next/server"
 
 export async function GET(req: Request) {
   try {
-    const shop = await db.shop.findMany()
+    const shop = await db.shop.findUnique({
+      where: {
+        id: 1
+      }
+    })
 
     return NextResponse.json(shop)
   } catch (error) {
