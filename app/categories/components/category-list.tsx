@@ -34,7 +34,7 @@ const CategoryList: React.FC<CategoryListProps> = ({categories}) => {
                 </div>
                 <CardFooter className="flex flex-col items-start gap-2 p-4">
                   <h2 className="text-lg font-bold">{category.name}</h2>
-                  <p>Products: {category.products.length}</p>
+                  <p>Products: {category.products?.length}</p>
                 </CardFooter>
               </CardContent>
             </Card>
