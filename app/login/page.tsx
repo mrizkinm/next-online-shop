@@ -11,9 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useErrorHandler } from "@/hooks/use-error-handler";
-import { useUserData } from "@/context/user-data-context";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useStore } from "@/context/store-context";
 
-const Login = () => {
+const LoginPage = () => {
   const formSchema = z.object({
     email: z.string().email("Email tidak valid").min(1, "Email tidak boleh kosong"),
     password: z.string().min(6, "Password harus memiliki minimal 6 karakter"),
@@ -22,7 +24,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const router = useRouter();
-  const { initAuth } = useUserData();
+  const { storeInfo } = useStore();
+  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -34,24 +37,19 @@ const Login = () => {
 
   const onSubmit = async (data: { email: string; password: string }) => {
     setLoading(true);
-
     try {
-      // Perform login request (replace with actual API call)
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const result = await signIn("credentials", {
+        ...data,
+        redirect: false, // Prevent automatic redirect
       });
 
-      if (response.ok) {
-        initAuth();
+      if (result?.error) {
+        // Jika terjadi error, tampilkan error menggunakan error handler
+        handleError(result.error);
+      } else if (result?.ok) {
+        // Jika login berhasil, arahkan ke halaman dashboard atau halaman yang diinginkan
         toast.success('Login sukses');
         router.push("/");
-      } else {
-        const { errors } = await response.json();
-        handleError(errors);
       }
     } catch (error) {
       console.log(error)
@@ -61,11 +59,11 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-black">
-      <div className="w-full max-w-md p-8 space-y-4 bg-white dark:bg-slate-950 shadow-lg rounded-lg mx-5">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="w-full max-w-md p-8 space-y-4 bg-white dark:bg-slate-900 shadow-lg rounded-lg mx-5">
         <div className="flex flex-col space-y-2 items-center">
-          <Image src="/img/gundam.png" width={100} height={100} alt="Logo" />
-          <h1 className="text-2xl font-semibold tracking-tight">Shop</h1>
+          <Image src={`${publicUrl}/${storeInfo.image}`} alt={storeInfo.name} width={200} height={200} />
+          {/* <h1 className="text-2xl font-semibold tracking-tight">{storeInfo.name}</h1> */}
           <p className="text-sm text-muted-foreground">Enter your email and password</p>
         </div>
         <Form {...form}>
@@ -119,9 +117,14 @@ const Login = () => {
             </Button>
           </form>
         </Form>
+        <div>
+          <p className="text-sm text-center">
+            Don't have an account? <Link href="/register" className="text-blue-600">Register</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Login
+export default LoginPage
