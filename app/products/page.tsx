@@ -30,9 +30,9 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
     <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto w-full py-8">
       <div className="space-y-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Produk</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Products</h1>
           <p className="text-sm text-muted-foreground">
-            Daftar semua produk yang tersedia.
+            List of all available products.
           </p>
         </div>
         <Separator />
