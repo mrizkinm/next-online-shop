@@ -55,7 +55,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({
     return (
       <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto w-full h-[50vh] py-8">
         <div className="flex items-center justify-center h-full">
-          <p className="text-neutral-500">Produk tidak ditemukan</p>
+          <p className="text-neutral-500">Product not found</p>
         </div>
       </div>
     );
