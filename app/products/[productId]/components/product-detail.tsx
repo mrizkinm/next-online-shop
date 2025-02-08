@@ -26,9 +26,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { useUserData } from '@/context/user-data-context';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
+import { useNumberFormat } from '@/hooks/use-number-format';
 
 interface ProductDetailProps {
   product: Product;
@@ -40,7 +41,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
   const { getSrc, handleError } = useImageFallbacks();
   const { addToCart } = useCart();
   const swiperRef = useRef<any>(null);
-  const { user } = useUserData();
+  const { data: session } = useSession();
+  const user = session?.user;
   const customerId = user?.id;
 
   const handleQuantityChange = (action: 'increase' | 'decrease') => {
@@ -115,14 +117,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
             </div>
             <h1 className="text-3xl font-bold">{product.name}</h1>
             <p className="text-2xl font-semibold mt-2">
-              Rp {product.price.toLocaleString('id-ID')}
+              Rp {useNumberFormat(product.price)}
             </p>
           </div>
 
           <Tabs defaultValue="description" className="w-full">
             <TabsList>
-              <TabsTrigger value="description">Deskripsi</TabsTrigger>
-              <TabsTrigger value="details">Detail Produk</TabsTrigger>
+              <TabsTrigger value="description">Description</TabsTrigger>
+              <TabsTrigger value="details">Product Details</TabsTrigger>
             </TabsList>
             <TabsContent value="description" className="mt-4">
               <p>{product.description}</p>
@@ -130,17 +132,17 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
             <TabsContent value="details" className="mt-4">
               <dl className="divide-y">
                 <div className="py-2 flex justify-between">
-                  <dt className="font-medium">Kategori</dt>
+                  <dt className="font-medium">Category</dt>
                   <dd className="text-gray-600">{product.category.name}</dd>
                 </div>
                 <div className="py-2 flex justify-between">
-                  <dt className="font-medium">Stok</dt>
+                  <dt className="font-medium">Stock</dt>
                   <dd className="text-gray-600">{product.quantity}</dd>
                 </div>
                 <div className="py-2 flex justify-between">
                   <dt className="font-medium">Status</dt>
                   <dd className="text-gray-600">
-                    {product.quantity > 0 ? 'Tersedia' : 'Stok Habis'}
+                    {product.quantity > 0 ? 'Available' : 'Out of stock'}
                   </dd>
                 </div>
               </dl>
@@ -150,7 +152,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
           <Card>
             <CardContent className="p-4 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="font-medium">Jumlah</span>
+                <span className="font-medium">Quantity</span>
                 <div className="flex items-center space-x-2">
                   <Button 
                     variant="outline" 
@@ -181,26 +183,22 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
                       disabled={product.quantity === 0}
                       onClick={() => addToCart(customerId, product.id, quantity)}
                     >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      {product.quantity === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}
+                      <ShoppingCart />
+                      {product.quantity === 0 ? 'Stok Habis' : 'Add to Cart'}
                     </Button>
                   : <Link
                       href="/login"
                       title="Add to Cart"
                       className={cn(buttonVariants({ variant: "default" }), "w-full")}
                     >
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      {product.quantity === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}
+                      <ShoppingCart />
+                      {product.quantity === 0 ? 'Stok Habis' : 'Add to Cart'}
                     </Link>
                 }
                 
               </div>
             </CardContent>
           </Card>
-
-          <div className="text-sm text-gray-500">
-            Terakhir diupdate: {new Date(product.updatedAt).toLocaleDateString('id-ID')}
-          </div>
         </div>
       </div>
     </div>
