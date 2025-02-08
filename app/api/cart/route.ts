@@ -22,8 +22,8 @@ export async function POST(req: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
-  const { customerId, productId } = await request.json();
+export async function DELETE(req: Request) {
+  const { customerId, productId } = await req.json();
 
   if (!customerId || !productId) {
     return NextResponse.json({ errors: "Invalid input" }, { status: 400 });
