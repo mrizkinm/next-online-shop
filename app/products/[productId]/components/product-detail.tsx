@@ -67,7 +67,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
               swiperRef.current = swiper; // Set Swiper instance
             }}
           >
-            {product.images.map((image: ProductImage, index: number) => (
+            {product.images?.map((image: ProductImage, index: number) => (
               <SwiperSlide key={image.id}>
                 <Image
                   src={getSrc(image.id, `${publicUrl}/${image.url}`
@@ -86,7 +86,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
 
           {/* Thumbnails */}
           <div className="grid grid-cols-5 gap-2">
-            {product.images.map((image: ProductImage, index: number) => (
+            {product.images?.map((image: ProductImage, index: number) => (
               <div
                 key={image.id}
                 className="relative aspect-square rounded-lg overflow-hidden cursor-pointer ring-2 ring-transparent hover:ring-black"
@@ -110,7 +110,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
         <div className="space-y-6 md:col-span-1 lg:col-span-2">
           <div>
             <div className="flex items-center space-x-2 mb-2">
-              <Badge>{product.category.name}</Badge>
+              <Badge>{product.category?.name}</Badge>
               {product.isFeatured && (
                 <Badge variant="secondary">Featured</Badge>
               )}
@@ -133,7 +133,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
               <dl className="divide-y">
                 <div className="py-2 flex justify-between">
                   <dt className="font-medium">Category</dt>
-                  <dd className="text-gray-600">{product.category.name}</dd>
+                  <dd className="text-gray-600">{product.category?.name}</dd>
                 </div>
                 <div className="py-2 flex justify-between">
                   <dt className="font-medium">Stock</dt>
