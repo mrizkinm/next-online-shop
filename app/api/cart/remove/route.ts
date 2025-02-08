@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function DELETE(request: Request) {
-  const { customerId } = await request.json();
+export async function DELETE(req: Request) {
+  const { customerId } = await req.json();
 
   if (!customerId) {
     return NextResponse.json({ errors: "Invalid input" }, { status: 400 });
@@ -11,7 +11,7 @@ export async function DELETE(request: Request) {
   try {
     await db.cart.deleteMany({
       where: {
-        customerId: parseInt(customerId)
+        customerId: customerId
       }
     });
 
