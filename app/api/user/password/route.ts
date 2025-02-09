@@ -5,11 +5,9 @@ import bcrypt from "bcryptjs";
 
 const formSchema = z.object({
     id: z.number().int(),
-    currentPassword: z.string()
-      .min(1, { message: 'Password saat ini harus diisi' }),
-    newPassword: z.string()
-      .min(6, { message: 'Password minimal 6 karakter' }),
-    confirmPassword: z.string()
+    currentPassword: z.string().min(1, { message: 'Password saat ini harus diisi' }),
+    newPassword: z.string().min(6, { message: 'Password minimal 6 karakter' }),
+    confirmPassword: z.string().min(6, { message: 'Password minimal 6 karakter' }),
   }).refine((data) => data.newPassword === data.confirmPassword, {
     message: "Password tidak cocok",
     path: ["confirmPassword"],
