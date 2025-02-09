@@ -30,7 +30,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({products}) => {
               <CardContent className="p-0">
                 <div className="relative aspect-square">
                   <Image
-                    src={getSrc(product.id, `${publicUrl}/${product.images[0].url}`)}
+                    src={getSrc(product.id, `${publicUrl}/${product.images?.[0].url}`)}
                     alt={product.name}
                     fill
                     sizes="100vw"
@@ -40,7 +40,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({products}) => {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col items-start gap-2 p-4">
-                <Badge variant="secondary">{product.category.name}</Badge>
+                <Badge variant="secondary">{product.category?.name}</Badge>
                 <h3 className="font-semibold tracking-tight">{product.name}</h3>
                 <p className="text-sm text-muted-foreground">
                   Rp {useNumberFormat(product.price)}
