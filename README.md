@@ -7,7 +7,7 @@ This project is a full-featured online shop built using Next.js and TypeScript.
 - Language: TypeScript
 - State management with React Hook Form
 - Authentication using NextAuth.js with Prisma Adapter
-- Secure authentication with JWT and bcryptjs
+- Secure authentication with JWT and bcrypt
 - Light/Dark mode support with Next-Themes
 - Carousel functionality with Swiper
 - Secure payment integration using Midtrans
