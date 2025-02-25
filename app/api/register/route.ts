@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import { z } from 'zod';
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 const formSchema = z.object({
   email: z.string().email("Email tidak valid").min(1, "Email tidak boleh kosong"),
