@@ -19,6 +19,7 @@ import { formatCurrency } from "@/lib/utils";
 import React, { useState } from "react";
 import { Order } from "@/app/types";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 interface OrderListProps {
   orders: Order[];
@@ -26,6 +27,7 @@ interface OrderListProps {
 
 const Orders: React.FC<OrderListProps> = ({orders}) => {
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
 
   const getStatusVariant = (status: string) => {
     switch(status) {
@@ -45,9 +47,13 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
         return snapPay(existingTransaction.snapToken);
       }
 
-      const paymentResponse = await fetch(`/api/order/snap`, {
+      const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/snap`, {
         method: 'POST',
         body: JSON.stringify({ id }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.token}`
+        }
       });
       
       const paymentData = await paymentResponse.json();
@@ -90,9 +96,13 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
   }
 
   async function checkTransactionStatus(id: number) {
-    const response = await fetch('/api/order/status', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/status`, {
       method: 'POST',
-      body: JSON.stringify({ id })
+      body: JSON.stringify({ id }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session?.token}`
+      }
     });
   
     if (!response.ok) {
