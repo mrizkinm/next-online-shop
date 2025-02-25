@@ -45,7 +45,7 @@ const Profile = ({user}: any) => {
   const router = useRouter();
   const { handleError } = useErrorHandler();
   const { resetCartSession } = useCart();
-  const { update } = useSession();
+  const { data: session, update } = useSession();
 
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -71,27 +71,31 @@ const Profile = ({user}: any) => {
   const onProfileSubmit = async (data: z.infer<typeof profileSchema>) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/user/account", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/account`, {
         method: "PATCH",
         body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.token}`
         }
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
-        await update({
-          name: data.name,
-          phone: data.phone,
-          address: data.address,
-          email: data.email
-        });
+        const newUserData = {
+          ...session?.user,
+          name: responseData.name,
+          email: responseData.email,
+          phone: responseData.phone,
+          address: responseData.address
+        };
+        await update({ user: newUserData });
         toast.success('Success to update data');
         router.refresh()  
       } else {
-        const { errors } = await response.json();
         // Menampilkan error toast untuk setiap field yang gagal
-        handleError(errors);
+        handleError(responseData.errors);
       }
     } catch (error) {
       console.log(error)
@@ -103,21 +107,24 @@ const Profile = ({user}: any) => {
   const onPasswordSubmit = async (data: z.infer<typeof passwordSchema>) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/user/password", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/password`, {
         method: "PATCH",
         body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.token}`
         }
       });
+
+      const responseData = await response.json();
 
       if (response.ok) {
         toast.success('Success to update data');
         await onLogout();
       } else {
-        const { errors } = await response.json();
+        
         // Menampilkan error toast untuk setiap field yang gagal
-        handleError(errors);
+        handleError(responseData.errors);
       }
     } catch (error) {
       console.log(error)
@@ -127,11 +134,31 @@ const Profile = ({user}: any) => {
   };
 
   const onLogout = async () => {
-    resetCartSession();
-    await signOut({
-      redirect: false
-    });
-    router.push("/login");
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/logout`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.token}`
+        }
+      });
+      
+      const responseData = await response.json();
+
+      if (response.ok) {
+        resetCartSession();
+        // Redirect to dashboard or other protected page on success
+        await signOut({
+          redirect: false
+        });
+        router.push("/login");
+      } else {
+        toast.error(responseData);
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+    }
   };
 
   return (
