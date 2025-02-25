@@ -8,18 +8,38 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSession } from 'next-auth/react';
 import Profile from './components/profile';
+import { useErrorHandler } from '@/hooks/use-error-handler';
 
 const AccountPage = () => {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const user = session?.user;
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { handleError } = useErrorHandler();
 
   const fetchOrders = async (customerId: string) => {
-    const response = await fetch(`/api/order/${customerId}`);
-    const responseData = await response.json();
-    setOrders(responseData.data);
-    setLoading(false);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/${customerId}`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.token}`
+        }
+      });
+      const responseData = await response.json();
+      
+      if (response.ok) {
+        setOrders(responseData.data);
+      } else {
+        // Menampilkan error toast untuk setiap field yang gagal
+        handleError(responseData.errors);
+        throw new Error("Gagal mengambil data");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
