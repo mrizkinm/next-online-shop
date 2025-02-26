@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { NextResponse } from "next/server"
 import { z } from "zod";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 const formSchema = z.object({
     id: z.number().int(),
