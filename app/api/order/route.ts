@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 import midtransClient from 'midtrans-client';
+import { OrderItem } from '@prisma/client';
 
 const snap = new midtransClient.Snap({
   isProduction: false,
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     const order = await db.$transaction(async (prisma) => {
       // update stock
       await Promise.all(
-        items.map(async (item: any) => {
+        items.map(async (item: OrderItem) => {
           const product = await prisma.product.findUnique({
             where: { id: item.productId },
           });
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
           totalAmount,
           status: 'Pending',
           items: {
-            create: items.map((item: any) => ({
+            create: items.map((item: OrderItem) => ({
               productId: item.productId,
               quantity: item.quantity,
               price: item.price,
@@ -98,7 +99,7 @@ export async function POST(req: Request) {
       const snapResponse = await snap.createTransaction(snapData);
 
       // Save the snap token in the order record
-      const updatedOrder = await prisma.order.update({
+      await prisma.order.update({
         where: { id: newOrder.id },
         data: {
           snapToken: snapResponse.token, // Save snapToken to the order

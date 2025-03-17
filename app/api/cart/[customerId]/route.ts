@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 
-export async function GET(req: Request, { params }: { params: { customerId: string } }) {
-  const param = await params;
-  const { customerId } = param;
+export async function GET(req: Request, { params } : { params: Promise<{customerId: string}> }) {
+  const { customerId } = await params;
 
   try {
     const cartItems = await db.cart.findMany({

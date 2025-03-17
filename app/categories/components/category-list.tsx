@@ -12,8 +12,7 @@ interface CategoryListProps {
 }
 
 const CategoryList: React.FC<CategoryListProps> = ({categories}) => {
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
-  const { getSrc, handleError } = useImageFallbacks();
+  const { getSrc, handleImageError } = useImageFallbacks();
 
   return (
     <div className="space-y-6">
@@ -24,12 +23,12 @@ const CategoryList: React.FC<CategoryListProps> = ({categories}) => {
               <CardContent className="p-0">
                 <div className="relative w-full h-40">
                   <Image
-                    src={getSrc(category.id, `${publicUrl}/${category.image}`)}
+                    src={getSrc(category.id, `${category.image}`)}
                     alt={category.name}
                     fill
                     className="object-cover rounded-t-lg"
                     sizes="100vw"
-                    onError={() => handleError(category.id)}
+                    onError={() => handleImageError(category.id)}
                   />
                 </div>
                 <CardFooter className="flex flex-col items-start gap-2 p-4">

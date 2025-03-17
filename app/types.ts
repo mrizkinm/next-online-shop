@@ -48,7 +48,7 @@ export interface Order {
   id: number;
   customerId: number; // Nullable jika memungkinkan pemesanan tanpa akun
   customer: Customer; // Relasi opsional ke tabel Customer
-  info: Record<string, any>; // JSON data
+  info: Record<string, string | number>; // JSON data
   items: OrderItem[];
   totalAmount: number;
   status: string; // Status pesanan

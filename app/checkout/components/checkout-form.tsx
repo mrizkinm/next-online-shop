@@ -19,8 +19,19 @@ import { formatCurrency } from "@/lib/utils"
 import { Textarea } from '@/components/ui/textarea';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useCart } from '@/context/cart-context';
+import { useCart } from '@/store/cart-store';
 import { CheckCircle } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useErrorHandler } from '@/hooks/use-error-handler';
+import { Cart } from '@/app/types';
+
+interface ProfileProps {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+}
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -35,8 +46,8 @@ const CheckoutForm = ({
   user
 }: { 
   total: number, 
-  items: any,
-  user: any
+  items: Cart[],
+  user: ProfileProps
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,11 +60,13 @@ const CheckoutForm = ({
   })
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { resetCart } = useCart();
+  const { removeAllCart } = useCart();
+  const { data: session } = useSession();
+  const { handleError } = useErrorHandler();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    const itemsCheckout = items.map((item: any) => ({
+    const itemsCheckout = items.map((item: Cart) => ({
       productId: item.productId,
       quantity: item.quantity,
       price: item.product.price,
@@ -66,39 +79,46 @@ const CheckoutForm = ({
         totalAmount: total,
         info: values
       });
-      const paymentResponse = await fetch('/api/order', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order`, {
         method: 'POST',
         body: dataOrder,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.token}`
+        }
       });
-      const paymentData = await paymentResponse.json();
+      const responseData = await response.json();
 
-      if (!paymentData.snapToken) {
-        throw new Error('Failed to create Snap token');
+      if (response.ok) {
+        if (session?.token && session?.user?.id) {
+          removeAllCart(session.token, session.user.id);
+        }
+        // Step 3: Tampilkan halaman pembayaran
+        window.snap.pay(responseData.snapToken, {
+          onSuccess: function (result: unknown) {
+            toast.success('Payment success!');
+            console.log(result);
+            router.push('/account');
+          },
+          onPending: function (result: unknown) {
+            toast.success('Waiting for payment confirmation.');
+            console.log(result);
+            router.push('/account');
+          },
+          onError: function (result: unknown) {
+            toast.error('Payment failed.');
+            console.log(result);
+            router.push('/account');
+          },
+          onClose: function () {
+            console.log('Customer closed the popup without finishing the payment');
+            router.push('/account');
+          },
+        });
+      } else {
+        // Menampilkan error toast untuk setiap field yang gagal
+        handleError(responseData.errors);
       }
-
-      resetCart();
-      // Step 3: Tampilkan halaman pembayaran
-      window.snap.pay(paymentData.snapToken, {
-        onSuccess: function (result: any) {
-          toast.success('Payment success!');
-          console.log(result);
-          router.push('/account');
-        },
-        onPending: function (result: any) {
-          toast.success('Waiting for payment confirmation.');
-          console.log(result);
-          router.push('/account');
-        },
-        onError: function (result: any) {
-          toast.error('Payment failed.');
-          console.log(result);
-          router.push('/account');
-        },
-        onClose: function () {
-          console.log('Customer closed the popup without finishing the payment');
-          router.push('/account');
-        },
-      });
     } catch (error) {
       console.error('Error handling payment:', error);
     } finally {

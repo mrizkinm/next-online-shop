@@ -10,7 +10,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export default async function Home() {
-  const { data: products, total } = await getProducts({
+  const { data: products } = await getProducts({
     isFeatured: true
   });
 

@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     const snapResponse = await snap.createTransaction(snapData);
     
     // Save the snap token in the order record
-    const updatedOrder = await db.order.update({
+    await db.order.update({
       where: { id },
       data: {
         snapToken: snapResponse.token, // Save snapToken to the order

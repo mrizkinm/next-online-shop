@@ -5,17 +5,18 @@ import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator'
-import { useCart } from '@/context/cart-context';
+import { useCart } from '@/store/cart-store';
 import { useNumberFormat } from '@/hooks/use-number-format';
 import { cn } from '@/lib/utils';
 import { CreditCard, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
+import { Cart } from '../types';
 
 const CartPage = () => {
   const { cart } = useCart();
   const totalItems = cart.length;
-  const totalPrice = cart.reduce((sum: any, item: any) => sum + (item.product.price * item.quantity), 0);
+  const totalPrice = cart.reduce((sum: number, item: Cart) => sum + (item.product.price * item.quantity), 0);
 
   return (
     <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto w-full py-8">
@@ -43,8 +44,7 @@ const CartPage = () => {
               <div className="pr-4">
                 {
                   cart.length > 0
-                    ? 
-                    cart.map((item: any) => (
+                  ? cart.map((item: Cart) => (
                     <React.Fragment key={item.id}>
                       <CartItem item={item} />
                       <Separator />

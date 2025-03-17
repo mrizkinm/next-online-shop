@@ -20,9 +20,10 @@ import {
   ShoppingCart 
 } from 'lucide-react';
 import { useImageFallbacks } from '@/hooks/use-image-fallbacks';
-import { useCart } from '@/context/cart-context';
+import { useCart } from '@/store/cart-store';
 import { Image as ProductImage, Product } from '@/app/types';
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from 'swiper';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -37,13 +38,11 @@ interface ProductDetailProps {
 
 const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
   const [quantity, setQuantity] = useState(1);
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
-  const { getSrc, handleError } = useImageFallbacks();
+  const { getSrc, handleImageError } = useImageFallbacks();
   const { addToCart } = useCart();
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
   const { data: session } = useSession();
   const user = session?.user;
-  const customerId = user?.id;
 
   const handleQuantityChange = (action: 'increase' | 'decrease') => {
     if (product) {
@@ -67,10 +66,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
               swiperRef.current = swiper; // Set Swiper instance
             }}
           >
-            {product.images?.map((image: ProductImage, index: number) => (
+            {product.images?.map((image: ProductImage) => (
               <SwiperSlide key={image.id}>
                 <Image
-                  src={getSrc(image.id, `${publicUrl}/${image.url}`
+                  src={getSrc(image.id, `${image.url}`
                   )}
                   alt={product.name}
                   title={product.name}
@@ -78,7 +77,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  onError={() => handleError(image.id)}
+                  onError={() => handleImageError(image.id)}
                 />
               </SwiperSlide>
             ))}
@@ -93,13 +92,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
                 onClick={() => swiperRef.current?.slideTo(index)} // Control the Swiper slide
               >
                 <Image
-                  src={getSrc(image.id, `${publicUrl}/${image.url}`)}
+                  src={getSrc(image.id, `${image.url}`)}
                   alt={`${product.name} Thumbnail ${index + 1}`}
                   title={`${product.name} Thumbnail ${index + 1}`}
                   className="object-cover"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  onError={() => handleError(image.id)}
+                  onError={() => handleImageError(image.id)}
                 />
               </div>
             ))}
@@ -181,7 +180,11 @@ const ProductDetail: React.FC<ProductDetailProps> = ({product}) => {
                       title="Add to Cart"
                       className="w-full" 
                       disabled={product.quantity === 0}
-                      onClick={() => addToCart(customerId, product.id, quantity)}
+                      onClick={() => {
+                        if (session?.token) {
+                          addToCart(session.token, user.id, product.id, quantity);
+                        }
+                      }}
                     >
                       <ShoppingCart />
                       {product.quantity === 0 ? 'Stok Habis' : 'Add to Cart'}

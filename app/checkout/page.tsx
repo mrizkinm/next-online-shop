@@ -1,19 +1,21 @@
 'use client'
 
 import { Separator } from '@/components/ui/separator';
-import { useCart } from '@/context/cart-context';
-import React, { use } from 'react'
+import { useCart } from '@/store/cart-store';
+import React from 'react'
 import CheckoutItem from './components/checkout-item';
 import CheckoutForm from './components/checkout-form';
 import { useSession } from 'next-auth/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Cart } from '../types';
 
 const CheckoutPage = () => {
   const { data: session } = useSession();
   const user = session?.user;
   const { cart } = useCart();
-  const totalPrice = cart.reduce((sum: any, item: any) => sum + (item.product.price * item.quantity), 0);
+
+  const totalPrice = cart.reduce((sum: number, item: Cart) => sum + (item.product.price * item.quantity), 0);
 
   return (
     <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto w-full py-8">

@@ -74,15 +74,15 @@ const Orders: React.FC<OrderListProps> = ({orders}) => {
   function snapPay(snapToken: string) {
     if (typeof window !== 'undefined' && window.snap) {
       window.snap.pay(snapToken, {
-        onSuccess: function (result: any) {
+        onSuccess: function (result: unknown) {
           toast.success('Payment success!');
           console.log(result);
         },
-        onPending: function (result: any) {
+        onPending: function (result: unknown) {
           toast.success('Waiting for payment confirmation.');
           console.log(result);
         },
-        onError: function (result: any) {
+        onError: function (result: unknown) {
           toast.error('Payment failed.');
           console.log(result);
         },

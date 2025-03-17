@@ -3,16 +3,16 @@ import { Poppins, Montserrat } from "next/font/google";
 
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import { StoreProvider } from "@/context/store-context";
 import { StoreInfo } from "./types";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { getCategories, getStoreInfo } from "@/lib/api";
-import { CartProvider } from "@/context/cart-context";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from 'react-hot-toast';
 import MidtransScript from '@/components/midtrans-script';
 import NextAuthProvider from "@/providers/next-auth-provider"
+import CartInitializer from "@/components/cart-init";
+import StoreInitializer from "@/components/store-init";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -42,32 +42,28 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const store = await getStoreInfo();
-  const storeInfo: StoreInfo = store;
   const categories = await getCategories({limit: 3});
 
   return (
     <NextAuthProvider>
-      <StoreProvider storeInfo={storeInfo}>
-        <CartProvider>
-          <html lang="en">
-            <body
-              className={`${poppins.variable} ${montserrat.variable} antialiased`}
-            >
-              <NextTopLoader showSpinner={false} />
-              <ThemeProvider attribute="class" defaultTheme="system">
-                <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[116px]">
-                  <Navbar />
-                  <Toaster />
-                  <MidtransScript />
-                  {children}
-                  <Footer categories={categories} />
-                </div>
-              </ThemeProvider>
-            </body>
-          </html>
-        </CartProvider>
-      </StoreProvider>
+      <html lang="en">
+        <body
+          className={`${poppins.variable} ${montserrat.variable} antialiased`}
+        >
+          <NextTopLoader showSpinner={false} />
+          <ThemeProvider attribute="class" defaultTheme="system">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pt-[116px]">
+              <StoreInitializer />
+              <CartInitializer />
+              <Navbar />
+              <Toaster />
+              <MidtransScript />
+              {children}
+              <Footer categories={categories} />
+            </div>
+          </ThemeProvider>
+        </body>
+      </html>
     </NextAuthProvider>
   );
 }

@@ -17,36 +17,36 @@ const AccountPage = () => {
   const [loading, setLoading] = useState(true);
   const { handleError } = useErrorHandler();
 
-  const fetchOrders = async (customerId: string) => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/${customerId}`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.token}`
-        }
-      });
-      const responseData = await response.json();
-      
-      if (response.ok) {
-        setOrders(responseData.data);
-      } else {
-        // Menampilkan error toast untuk setiap field yang gagal
-        handleError(responseData.errors);
-        throw new Error("Gagal mengambil data");
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchOrders = async (customerId: string) => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/${customerId}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.token}`
+          }
+        });
+        const responseData = await response.json();
+        
+        if (response.ok) {
+          setOrders(responseData.data);
+        } else {
+          // Menampilkan error toast untuk setiap field yang gagal
+          handleError(responseData.errors);
+          throw new Error("Gagal mengambil data");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (user?.id) {
       fetchOrders(user.id.toString());
     }
-  }, [user]);
+  }, [user?.id, session?.token, handleError]);
 
   return (
     <div className="max-w-[1240px] px-4 sm:px-6 lg:px-8 mx-auto w-full py-8">

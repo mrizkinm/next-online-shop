@@ -5,11 +5,11 @@ import { Separator } from "@/components/ui/separator";
 import ProductListSkeleton from './components/product-list-skeleton';
 
 interface ProductsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     categoryId?: string;
     page?: string;
     search?: string;
-  }
+  }>
 }
 
 const ProductsPage = async ({ searchParams }: ProductsPageProps) => {

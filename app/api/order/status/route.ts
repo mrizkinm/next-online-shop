@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import midtransClient from 'midtrans-client';
+// import midtransClient from 'midtrans-client';
 
-const coreApi = new midtransClient.CoreApi({
-  isProduction: false,
-  serverKey: process.env.MIDTRANS_SERVER_KEY!,
-  clientKey: process.env.MIDTRANS_CLIENT_KEY!
-});
+// const coreApi = new midtransClient.CoreApi({
+//   isProduction: false,
+//   serverKey: process.env.MIDTRANS_SERVER_KEY!,
+//   clientKey: process.env.MIDTRANS_CLIENT_KEY!
+// });
 
 export async function POST(req: Request) {
   try {

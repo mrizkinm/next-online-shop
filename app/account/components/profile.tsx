@@ -14,9 +14,19 @@ import toast from 'react-hot-toast';
 import { useErrorHandler } from '@/hooks/use-error-handler';
 import { Textarea } from '@/components/ui/textarea';
 import { signOut, useSession } from 'next-auth/react';
-import { useCart } from '@/context/cart-context';
+import { useCart } from '@/store/cart-store';
 
-const Profile = ({user}: any) => {
+interface ProfileProps {
+  user?: {
+    id: number;
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  }
+}
+
+const Profile: React.FC<ProfileProps> = ({ user }) => {
   const profileSchema = z.object({
     id: z.number().int(),
     name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -52,9 +62,9 @@ const Profile = ({user}: any) => {
     defaultValues: user || {
       name: '',
       email: '',
-      pehone: '',
+      phone: '',
       address: '',
-      id: ''
+      id: undefined
     }
   });
 

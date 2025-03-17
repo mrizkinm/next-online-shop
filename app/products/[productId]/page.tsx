@@ -4,9 +4,9 @@ import { getProductDetail } from '@/lib/api';
 import ProductDetail from './components/product-detail';
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{  
     productId: string;
-  }
+  }>
 }
 
 const ProductPage: React.FC<ProductPageProps> = async ({

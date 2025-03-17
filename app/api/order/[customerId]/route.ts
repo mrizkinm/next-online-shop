@@ -1,20 +1,13 @@
 import db from "@/lib/db";
 import { NextResponse } from "next/server"
 
-export async function GET(req: Request, {params} : {params: {customerId: string}}) {
+export async function GET(req: Request, { params } : { params: Promise<{customerId: string}> }) {
   try {
-    const param = await params;
-    const customerId = parseInt(param.customerId);
-
-    if (isNaN(customerId)) {
-      return NextResponse.json({ 
-        errors: "Invalid customer ID", 
-        data: [], 
-        total: 0 
-      }, { status: 400 });
-    }
+    const { customerId } = await params;
     const orders = await db.order.findMany({
-      where: { customerId },
+      where: {
+        id: parseInt(customerId)
+      },
       include: {
         items: {
           include: {

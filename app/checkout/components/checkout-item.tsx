@@ -12,8 +12,7 @@ interface CartItemProps {
 }
 
 const CheckoutItem: React.FC<CartItemProps> = ({items}) => {
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
-   const { getSrc, handleError } = useImageFallbacks();
+   const { getSrc, handleImageError } = useImageFallbacks();
 
   return (
     <Card>
@@ -29,12 +28,12 @@ const CheckoutItem: React.FC<CartItemProps> = ({items}) => {
             <div className="flex items-center space-x-4">
               <div className="w-16 h-16 relative rounded overflow-hidden">
                 <Image
-                  src={getSrc(item.id, `${publicUrl}/${item.product.images?.[0]?.url}`)}
+                  src={getSrc(item.id, `${item.product.images?.[0]?.url}`)}
                   alt={item.product.name}
                   width={80}
                   height={80}
                   className="object-cover w-full h-full"
-                  onError={() => handleError(item.id)}
+                  onError={() => handleImageError(item.id)}
                 />
               </div>
               <div>

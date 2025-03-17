@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useStore } from "@/context/store-context";
+import { useStore } from "@/store/shop-store";
 
 const LoginPage = () => {
   const formSchema = z.object({
@@ -25,7 +25,6 @@ const LoginPage = () => {
   const { handleError } = useErrorHandler();
   const router = useRouter();
   const { storeInfo } = useStore();
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -62,7 +61,7 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="w-full max-w-md p-8 space-y-4 bg-white dark:bg-slate-900 shadow-lg rounded-lg mx-5">
         <div className="flex flex-col space-y-2 items-center">
-          <Image src={`${publicUrl}/${storeInfo.image}`} alt={storeInfo.name} width={200} height={200} />
+          <Image src={storeInfo?.image || "/img/default.jpg"} alt={storeInfo?.name || "Store Image"} width={150} height={50} />
           {/* <h1 className="text-2xl font-semibold tracking-tight">{storeInfo.name}</h1> */}
           <p className="text-sm text-muted-foreground">Enter your email and password</p>
         </div>
@@ -119,7 +118,7 @@ const LoginPage = () => {
         </Form>
         <div>
           <p className="text-sm text-center">
-            Don't have an account? <Link href="/register" className="text-blue-600">Register</Link>
+            Don&apos;t have an account? <Link href="/register" className="text-blue-600">Register</Link>
           </p>
         </div>
       </div>
