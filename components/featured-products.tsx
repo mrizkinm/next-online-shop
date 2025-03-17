@@ -18,24 +18,24 @@ interface FeaturedProductsProps {
 }
 
 const FeaturedProducts: React.FC<FeaturedProductsProps> = ({products}) => {
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
-  const { getSrc, handleError } = useImageFallbacks();
+  const { getSrc, handleImageError } = useImageFallbacks();
 
   return (
     <>
      {products.map((product: Product) => {
+      const formattedPrice = useNumberFormat(product.price);
         return (
           <Link key={product.id} href={`/products/${product.id}`}>
             <Card className="h-full hover:shadow-lg transition-shadow">
               <CardContent className="p-0">
                 <div className="relative aspect-square">
                   <Image
-                    src={getSrc(product.id, `${publicUrl}/${product.images?.[0].url}`)}
+                    src={getSrc(product.id, `${product.images?.[0].url}`)}
                     alt={product.name}
                     fill
                     sizes="100vw"
                     className="object-cover rounded-t-lg"
-                    onError={() => handleError(product.id)}
+                    onError={() => handleImageError(product.id)}
                   />
                 </div>
               </CardContent>
@@ -43,7 +43,7 @@ const FeaturedProducts: React.FC<FeaturedProductsProps> = ({products}) => {
                 <Badge variant="secondary">{product.category?.name}</Badge>
                 <h3 className="font-semibold tracking-tight">{product.name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Rp {useNumberFormat(product.price)}
+                  Rp {formattedPrice}
                 </p>
                 {product.quantity === 0 && (
                   <Badge variant="destructive">Stok Habis</Badge>

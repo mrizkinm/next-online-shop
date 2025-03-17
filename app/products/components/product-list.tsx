@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -51,8 +51,7 @@ const ProductList: React.FC<ProductListProps> = ({
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
-  const { getSrc, handleError } = useImageFallbacks();
+  const { getSrc, handleImageError } = useImageFallbacks();
   
   const totalPages = Math.ceil(total / pageSize);
 
@@ -133,39 +132,41 @@ const ProductList: React.FC<ProductListProps> = ({
       {/* Products Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.length > 0 ? (
-          products.map((product) => (
-            <Link key={product.id} href={`/products/${product.id}`}>
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <CardContent className="p-0">
-                  <div className="relative aspect-square">
-                    <Image
-                      src={getSrc(product.id, `${publicUrl}/${product.images?.[0].url}`)}
-                      alt={product.name}
-                      fill
-                      sizes="100vw"
-                      className="object-cover rounded-t-lg"
-                      onError={() => handleError(product.id)}
-                    />
-                    {product.isFeatured && (
-                      <Badge className="absolute top-2 right-2">
-                        Featured
-                      </Badge>
+          products.map((product) => {
+            const formattedPrice = useNumberFormat(product.price);
+            return (
+              <Link key={product.id} href={`/products/${product.id}`}>
+                <Card className="h-full hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="relative aspect-square">
+                      <Image
+                        src={getSrc(product.id, `${product.images?.[0].url}`)}
+                        alt={product.name}
+                        fill
+                        sizes="100vw"
+                        className="object-cover rounded-t-lg"
+                        onError={() => handleImageError(product.id)}
+                      />
+                      {product.isFeatured && (
+                        <Badge className="absolute top-2 right-2">
+                          Featured
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex flex-col items-start gap-2 p-4">
+                    <Badge variant="secondary">{product.category?.name}</Badge>
+                    <h3 className="font-semibold tracking-tight">{product.name}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Rp { formattedPrice }
+                    </p>
+                    {product.quantity === 0 && (
+                      <Badge variant="destructive">Out of stock</Badge>
                     )}
-                  </div>
-                </CardContent>
-                <CardFooter className="flex flex-col items-start gap-2 p-4">
-                  <Badge variant="secondary">{product.category?.name}</Badge>
-                  <h3 className="font-semibold tracking-tight">{product.name}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Rp { useNumberFormat(product.price) }
-                  </p>
-                  {product.quantity === 0 && (
-                    <Badge variant="destructive">Out of stock</Badge>
-                  )}
-                </CardFooter>
-              </Card>
-            </Link>
-          ))
+                  </CardFooter>
+                </Card>
+              </Link>
+          )})
         ) : (
           <div className="h-[50vh] col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
             <div className="flex items-center justify-center h-full">

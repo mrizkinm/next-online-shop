@@ -2,13 +2,13 @@ import { useState } from "react";
 
 type ImageFallbacksHook = {
   getSrc: (key: number, initialSrc: string) => string;
-  handleError: (key: number) => void;
+  handleImageError: (key: number) => void;
 };
 
 export const useImageFallbacks = () : ImageFallbacksHook => {
   const [srcs, setSrcs] = useState<Record<string, string>>({});
 
-  const handleError = (key: number): void => {
+  const handleImageError = (key: number): void => {
     setSrcs((prev) => ({
       ...prev,
       [key]: '/img/default.jpg',
@@ -19,5 +19,5 @@ export const useImageFallbacks = () : ImageFallbacksHook => {
     return srcs[key] || initialSrc;
   };
 
-  return { getSrc, handleError };
+  return { getSrc, handleImageError };
 };

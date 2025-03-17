@@ -12,7 +12,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useErrorHandler } from "@/hooks/use-error-handler";
 import { Textarea } from "@/components/ui/textarea";
-import { useStore } from "@/context/store-context";
+import { useStore } from "@/store/shop-store";
 import Link from "next/link";
 
 const RagisterPage = () => {
@@ -28,7 +28,6 @@ const RagisterPage = () => {
   const { handleError } = useErrorHandler();
   const router = useRouter();
   const { storeInfo } = useStore();
-  const publicUrl = process.env.NEXT_PUBLIC_API_URL_PUBLIC;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,7 +43,7 @@ const RagisterPage = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/register", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -52,14 +51,15 @@ const RagisterPage = () => {
         },
       });
 
+      const responseData = await response.json();
+
       if (response.ok) {
         toast.success('Register success');
         setTimeout(() => {
           router.push("/login");
         }, 1000);
       } else {
-        const { errors } = await response.json();
-        handleError(errors);
+        handleError(responseData.errors);
       }
     } catch (error) {
       console.log(error)
@@ -72,7 +72,7 @@ const RagisterPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
       <div className="w-full max-w-md p-8 space-y-4 bg-white dark:bg-slate-900 shadow-lg rounded-lg mx-5 my-6">
         <div className="flex flex-col space-y-2 items-center">
-          <Image src={`${publicUrl}/${storeInfo.image}`} alt={storeInfo.name} width={200} height={200} />
+          <Image src={storeInfo?.image || '/img/default.jpg'} alt={storeInfo?.name || 'Store Image'} width={150} height={50} />
           {/* <h1 className="text-2xl font-semibold tracking-tight">{storeInfo.name}</h1> */}
           <p className="text-sm text-muted-foreground">Enter your information</p>
         </div>

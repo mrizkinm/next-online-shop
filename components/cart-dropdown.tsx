@@ -10,25 +10,23 @@ import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 import CartItem from './cart-item';
-import { useCart } from '@/context/cart-context';
+import { useCart } from '@/store/cart-store';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useNumberFormat } from '@/hooks/use-number-format';
+import { Cart } from '@/app/types';
 
 const CartDropdown = () => {
-
   const { cart } = useCart();
 
-  const cartItems = cart;
-
-  // const cartItems = [
+  // const cart = [
   //   { id: 1, name: "Premium T-Shirt", price: 299000, quantity: 2, image: "/api/placeholder/100/100" },
   //   { id: 2, name: "Stylish Jeans", price: 599000, quantity: 1, image: "/api/placeholder/100/100" },
   //   { id: 3, name: "Classic Watch", price: 899000, quantity: 1, image: "/api/placeholder/100/100" },
   // ];
 
-  const totalItems = cartItems.length;
-  const totalPrice = cartItems.reduce((sum: any, item: any) => sum + (item.product.price * item.quantity), 0);
+  const totalItems = cart.length;
+  const totalPrice = cart.reduce((sum: number, item: Cart) => sum + (item.product.price * item.quantity), 0);
 
   return (
     <Popover>
@@ -51,9 +49,9 @@ const CartDropdown = () => {
         </div>
         <ScrollArea className="h-[300px] pr-4">
           {
-          cartItems.length > 0
+          cart.length > 0
             ? 
-            cartItems.map((item: any) => (
+            cart.map((item: Cart) => (
             <React.Fragment key={item.id}>
               <CartItem item={item} />
               <Separator />
