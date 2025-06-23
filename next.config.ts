@@ -6,6 +6,20 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
+        port: '3003',
+        pathname: '/product/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3003',
+        pathname: '/shop/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3003',
+        pathname: '/category/**',
       },
       {
         protocol: "https",

@@ -29,6 +29,8 @@ const CartItem: React.FC<CartItemProps> = ({item}) => {
         <Image
           src={getSrc(item.id, imageUrl)}
           alt={item.product.name}
+          width={64}
+          height={64}
           className="object-cover w-full h-full"
           onError={() => handleImageError(item.id)}
         />

@@ -110,6 +110,8 @@ const SearchDropdown = () => {
                         <Image
                           src={`${product.images?.[0].url}` || "/img/default.jpg"} // Placeholder jika gambar tidak ada
                           alt={product.name}
+                          width={48}
+                          height={48}
                           className="w-12 h-12 object-cover rounded-md"
                         />
                         <div>
